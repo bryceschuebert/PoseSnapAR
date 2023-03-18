@@ -3,7 +3,7 @@ import React from 'react';
 const Homepage = () => {
   return (
     <div>
-      <h1>Welcome to CAD App</h1>
+      <h1>Welcome to SnapPoseAR</h1>
     </div>
   );
 };
