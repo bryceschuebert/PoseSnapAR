@@ -1,11 +1,4 @@
 /* src/styles/login.css */
-body {
-    font-family: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-    font-weight: 400;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-  }
   
   .container {
     max-width: 400px;
