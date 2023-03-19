@@ -1,21 +1,38 @@
+// App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
-import Homepage from './components/Homepage/Homepage';
-import Login from './components/Login/Login';
+import { useAuth0 } from '@auth0/auth0-react';
+import Loading from './components/Loading';
+import HomePage from './components/HomePage';
+import Account from './components/Account';
+import ProjectPage from './components/Project/ProjectPage'; // Import ProjectPage component
+import Navbar from './components/Navbar';
 
-const App = () => {
+function App() {
+  const { isLoading } = useAuth0();
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <Router>
-      <Routes>
-       <ProtectedRoute path="/" element={<Homepage />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/projects" element={<ProjectPage />} />
+        </Routes>
+      </Router>
+    </div>
   );
-};
+}
 
 export default App;
+
+
+
 
 
 
