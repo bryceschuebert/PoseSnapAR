@@ -1,27 +1,22 @@
-import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+// components/HomePage.js
+import { useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
 
-  return (
-    <div className="HomePage">
-      {isAuthenticated ? (
-        <>
-          <div>
-            <img src={user.picture} alt={user.name} />
-            <h2>{user.name}</h2>
-            <p>{user.email}</p>
-          </div>
-          <button onClick={() => logout({ returnTo: window.location.origin })}>
-            Log Out
-          </button>
-        </>
-      ) : (
-        <button onClick={loginWithRedirect}>Log In</button>
-      )}
-    </div>
-  );
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/projects");
+    } else {
+      navigate("/login-signup");
+    }
+  }, [isAuthenticated, navigate]);
+
+  return null;
 };
 
 export default HomePage;
+

@@ -1,14 +1,16 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Loading from './components/Loading';
-import HomePage from './components/HomePage';
 import Account from './components/Account';
 import ProjectPage from './components/Project/ProjectPage';
-import Navbar from './components/Navbar';
+import Navbar from './components/Navigation/Navbar';
+import HomePage from './components/HomePage';
+import LoginSignUp from './components/Navigation/LoginSignUp';
 
 function App() {
   const { isLoading } = useAuth0();
+  const location = useLocation();
 
   if (isLoading) {
     return <Loading />;
@@ -16,17 +18,19 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
+      {location.pathname !== '/login-signup' && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/account" element={<Account />} />
         <Route path="/projects" element={<ProjectPage />} />
+        <Route path="/login-signup" element={<LoginSignUp />} />
       </Routes>
     </div>
   );
 }
 
 export default App;
+
 
 
 
