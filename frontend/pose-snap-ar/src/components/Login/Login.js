@@ -17,7 +17,7 @@ const Login = () => {
       <h2>Login</h2>
       <button>Login with Google</button>
       <button>Login with Facebook</button>
-      <button>Login with Apple</button>
+      <button>L</button>
       <h3>Or</h3>
       <form onSubmit={handleSubmit}>
         <div>

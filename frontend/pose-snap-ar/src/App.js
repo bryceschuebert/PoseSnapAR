@@ -6,7 +6,7 @@ import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 
 const App = () => {
-  const isAuthenticated = false; // Replace this with the actual authentication status
+  const isAuthenticated = false;
 
   const ProtectedHomepage = () => {
     return isAuthenticated ? <Homepage /> : <Navigate to="/login" replace />;
