@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from '../Buttons/LogOutButton';
-import { Layout, Menu, Button, Dropdown } from 'antd';
+import NewProjectButton from '../Buttons/NewProjectButton';
+import OpenProjectButton from '../Buttons/OpenProjectButton';
+import { Row, Col, Layout, Menu, Dropdown, Button, Space } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import styles from '../Buttons/button.module.css';
 
 const { Header } = Layout;
 
-const NavBar = ({ onNewProject }) => {
+const NavBar = ({ onNewProject, onOpenProject }) => {
   const { isAuthenticated, user } = useAuth0();
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const onAccountPage = location.pathname === '/account';
 
-  const handleMouseEnter = () => {
-    setDropdownVisible(true);
-  };
-
-  const handleMouseLeave = () => {
-    setDropdownVisible(false);
+  const handleBack = () => {
+    navigate(-1);
   };
 
   const menu = (
@@ -31,31 +33,43 @@ const NavBar = ({ onNewProject }) => {
 
   return (
     <Header>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex' }}>
-          <Button type="text" onClick={onNewProject}>
-            New
-          </Button>
-          <Button type="text" onClick={onNewProject}>
-            Open
-          </Button>
-        </div>
-        {isAuthenticated ? (
-          <Dropdown
-            overlay={menu}
-            onVisibleChange={setDropdownVisible}
-            visible={isDropdownVisible}
+      <Row justify="center">
+        <Col xs={24} sm={20} md={16} lg={12} xl={8}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: '100%',
+            }}
           >
-            <Button>
-              Hi, {user.name}
-            </Button>
-          </Dropdown>
-        ) : (
-          <Button>
-            <Link to="/login-signup">Login</Link>
-          </Button>
-        )}
-      </div>
+            <div style={{ display: 'flex' }}>
+              {onAccountPage ? (
+                <Button onClick={handleBack}>Back</Button>
+              ) : (
+                <>
+                  <NewProjectButton onClick={onNewProject} />
+                  <OpenProjectButton onClick={onOpenProject} />
+                </>
+              )}
+            </div>
+            {isAuthenticated ? (
+              <Dropdown overlay={menu} className={styles.navText}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    Hi, {user.name}
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            ) : (
+              <Button>
+                <Link to="/login-signup">Login</Link>
+              </Button>
+            )}
+          </div>
+        </Col>
+      </Row>
     </Header>
   );
 };
