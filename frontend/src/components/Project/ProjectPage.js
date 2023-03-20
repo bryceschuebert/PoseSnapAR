@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavBar from "../Navigation/Navbar";
 import ProjectModal from "./ProjectModal";
 import Questionnaire from "./Questionnaire";
 import CADViewer from "./CADViewer";
@@ -20,7 +19,6 @@ const ProjectPage = () => {
 
   return (
     <div>
-      <NavBar onNewProject={() => setProjectModalVisible(true)} />
       <ProjectModal
         visible={projectModalVisible}
         onSelectProject={handleProjectSelection}

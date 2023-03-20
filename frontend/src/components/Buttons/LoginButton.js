@@ -14,7 +14,7 @@ export const LoginButton = () => {
   };
 
   return (
-    <Button type="primary" onClick={handleLogin}>
+    <Button type="primary" size="large" onClick={handleLogin}>
       Log In
     </Button>
   );

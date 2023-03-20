@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from '../Buttons/LogOutButton';
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Button, Dropdown } from 'antd';
 
 const { Header } = Layout;
 
@@ -18,35 +18,44 @@ const NavBar = ({ onNewProject }) => {
     setDropdownVisible(false);
   };
 
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <Link to="/account">Account</Link>
+      </Menu.Item>
+      <Menu.Item>
+        <LogoutButton />
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <Header>
-      <Menu mode="horizontal" theme="dark">
-        {isAuthenticated && (
-          <>
-            <Menu.Item key="new" onClick={onNewProject}>
-              New
-            </Menu.Item>
-            <Menu.Item key="open" onClick={onNewProject}>
-              Open
-            </Menu.Item>
-          </>
-        )}
-        {isAuthenticated && (
-          <div
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            className="user-dropdown"
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex' }}>
+          <Button type="text" onClick={onNewProject}>
+            New
+          </Button>
+          <Button type="text" onClick={onNewProject}>
+            Open
+          </Button>
+        </div>
+        {isAuthenticated ? (
+          <Dropdown
+            overlay={menu}
+            onVisibleChange={setDropdownVisible}
+            visible={isDropdownVisible}
           >
-            <span>Hi, {user.name}</span>
-            {isDropdownVisible && (
-              <div className="user-dropdown-menu">
-                <Link to="/account">Account</Link>
-                <LogoutButton />
-              </div>
-            )}
-          </div>
+            <Button>
+              Hi, {user.name}
+            </Button>
+          </Dropdown>
+        ) : (
+          <Button>
+            <Link to="/login-signup">Login</Link>
+          </Button>
         )}
-      </Menu>
+      </div>
     </Header>
   );
 };
