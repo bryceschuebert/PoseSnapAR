@@ -7,6 +7,7 @@ import ProjectPage from './components/Project/ProjectPage';
 import Navbar from './components/Navigation/Navbar';
 import HomePage from './components/HomePage';
 import LoginSignUp from './components/Navigation/LoginSignUp';
+import MobileWarning from './components/MobileWarning';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -18,6 +19,7 @@ function App() {
 
   return (
     <div className="App">
+      <MobileWarning />
       {location.pathname !== '/login-signup' && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -30,7 +32,7 @@ function App() {
 }
 
 export default App;
-
+ 
 
 
 

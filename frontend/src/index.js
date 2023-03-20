@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Auth0ProviderWithNavigate } from "./auth0-provider-with-navigate";
 import App from './App';
-import './index.css';
+import '../node_modules/antd/dist/reset.css';
+
 
 ReactDOM.render(
   <React.StrictMode>

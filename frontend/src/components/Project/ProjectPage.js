@@ -1,22 +1,43 @@
-// ProjectPage.js
-import React from 'react';
-import ProjectGrid from './ProjectGrid';
-
-const projects = [
-  { id: 1, name: 'Project 1', imageUrl: 'https://via.placeholder.com/150' },
-  { id: 2, name: 'Project 2', imageUrl: 'https://via.placeholder.com/150' },
-];
+import React, { useState } from "react";
+import NavBar from "../Navigation/Navbar";
+import ProjectModal from "./ProjectModal";
+import Questionnaire from "./Questionnaire";
+import CADViewer from "./CADViewer";
 
 const ProjectPage = () => {
+  const [projectModalVisible, setProjectModalVisible] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [questionnaireAnswers, setQuestionnaireAnswers] = useState({});
+
+  const handleProjectSelection = (project) => {
+    setSelectedProject(project);
+    setProjectModalVisible(false);
+  };
+
+  const handleQuestionnaireCompletion = (answers) => {
+    setQuestionnaireAnswers(answers);
+  };
+
   return (
     <div>
-      <ProjectGrid projects={projects} />
+      <NavBar onNewProject={() => setProjectModalVisible(true)} />
+      <ProjectModal
+        visible={projectModalVisible}
+        onSelectProject={handleProjectSelection}
+        onCancel={() => setProjectModalVisible(false)}
+      />
+      {selectedProject && !questionnaireAnswers && (
+        <Questionnaire onSubmit={handleQuestionnaireCompletion} />
+      )}
+      {selectedProject && questionnaireAnswers && (
+        <CADViewer
+          project={selectedProject}
+          answers={questionnaireAnswers}
+        />
+      )}
     </div>
   );
 };
 
 export default ProjectPage;
-
-
-
 
