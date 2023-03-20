@@ -5,7 +5,7 @@ import styles from './button.module.css';
 const NewProjectButton = ({ onClick }) => {
   return (
     <Button
-      type="text"
+      type="link"
       onClick={onClick}
       className={styles.navText}
     >

@@ -7,6 +7,7 @@ import OpenProjectButton from '../Buttons/OpenProjectButton';
 import { Row, Col, Layout, Menu, Dropdown, Button, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import styles from '../Buttons/button.module.css';
+import navbarStyles from './navbar.module.css';
 
 const { Header } = Layout;
 
@@ -32,35 +33,34 @@ const NavBar = ({ onNewProject, onOpenProject }) => {
   );
 
   return (
-    <Header>
-      <Row justify="center">
-        <Col xs={24} sm={20} md={16} lg={12} xl={8}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              height: '100%',
-            }}
-          >
-            <div style={{ display: 'flex' }}>
-              {onAccountPage ? (
-                <Button onClick={handleBack}>Back</Button>
-              ) : (
-                <>
-                  <NewProjectButton onClick={onNewProject} />
-                  <OpenProjectButton onClick={onOpenProject} />
-                </>
-              )}
-            </div>
+    <Header className={navbarStyles.customHeader} style={{ display: 'flex', alignItems: 'center' }}>
+      <Row style={{ width: '100%' }}>
+        <Col span={6}>
+          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+            {onAccountPage ? (
+              <Button type="link" className={styles.navText} onClick={handleBack}>Back</Button>
+            ) : (
+              <>
+                <NewProjectButton onClick={onNewProject} />
+                <OpenProjectButton onClick={onOpenProject} />
+              </>
+            )}
+          </div>
+        </Col>
+        <Col span={8} offset={8}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {isAuthenticated ? (
               <Dropdown overlay={menu} className={styles.navText}>
-                <a onClick={(e) => e.preventDefault()}>
+                <Button
+                  onClick={(e) => e.preventDefault()}
+                  type="link"
+                  className={styles.navText}
+                >
                   <Space>
                     Hi, {user.name}
                     <DownOutlined />
                   </Space>
-                </a>
+                </Button>
               </Dropdown>
             ) : (
               <Button>
@@ -75,6 +75,8 @@ const NavBar = ({ onNewProject, onOpenProject }) => {
 };
 
 export default NavBar;
+
+
 
 
 
