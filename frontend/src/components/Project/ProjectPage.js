@@ -1,38 +1,24 @@
+// ProjectPage.js
 import React, { useState } from "react";
-import ProjectModal from "./ProjectModal";
-import Questionnaire from "./Questionnaire";
-import CADViewer from "./CADViewer";
+import CompareProject from "./CompareProject";
+import ProjectPose from "./PoseProject";
+import Questionnaire from './Questionnaire';
+
 
 const ProjectPage = () => {
-  const [projectModalVisible, setProjectModalVisible] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [questionnaireAnswers, setQuestionnaireAnswers] = useState({});
+  const [selectedProjectType, setSelectedProjectType] = useState(null);
 
-  const handleProjectSelection = (project) => {
-    setSelectedProject(project);
-    setProjectModalVisible(false);
-  };
-
-  const handleQuestionnaireCompletion = (answers) => {
-    setQuestionnaireAnswers(answers);
+  const handleQuestionnaireCompletion = (projectType) => {
+    setSelectedProjectType(projectType);
   };
 
   return (
     <div>
-      <ProjectModal
-        visible={projectModalVisible}
-        onSelectProject={handleProjectSelection}
-        onCancel={() => setProjectModalVisible(false)}
-      />
-      {selectedProject && !questionnaireAnswers && (
+      {!selectedProjectType && (
         <Questionnaire onSubmit={handleQuestionnaireCompletion} />
       )}
-      {selectedProject && questionnaireAnswers && (
-        <CADViewer
-          project={selectedProject}
-          answers={questionnaireAnswers}
-        />
-      )}
+      {selectedProjectType === "pose" && <ProjectPose />}
+      {selectedProjectType === "compare" && <CompareProject />}
     </div>
   );
 };

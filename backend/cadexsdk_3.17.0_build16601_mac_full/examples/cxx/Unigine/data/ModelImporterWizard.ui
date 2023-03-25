@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui version="1.0">
+    <window name="window" export="1" width="350" height="150" enabled="1" space_y="10">
+        <text align="left">Model Importer Wizard</text>
+        <groupbox space="8">
+            <text>File Selection</text>
+            <align align="left">
+                <label>
+                    <text>Enter file path</text>
+                </label>
+                <hbox align="expand">
+                    <editline name="filepath" export="1" align="expand" height="16">
+                        <text></text>
+                    </editline>
+                    <button name="browseBtn" export="1">
+                        <text>Browse</text>
+                    </button>
+                    
+                </hbox>
+            </align>
+        </groupbox>
+        <groupbox space="8">
+            <text>Import</text>
+            <button name="importViaPluginBtn" export="1" align="expand">
+                <text>Import via Plugin</text>
+            </button>
+            <button name="importViaSDKBtn" export="1" align="expand">
+                <text>Import via SDK</text>
+            </button>
+        </groupbox>
+    </window>
+</ui>
