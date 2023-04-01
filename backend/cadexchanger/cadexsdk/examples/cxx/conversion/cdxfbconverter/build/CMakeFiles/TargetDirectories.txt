@@ -1,0 +1,2 @@
+/Users/bryceschuebert/Code/GitHub/PoseSnapAR/backend/cadexchanger/cadexsdk/examples/cxx/conversion/cdxfbconverter/build/CMakeFiles/edit_cache.dir
+/Users/bryceschuebert/Code/GitHub/PoseSnapAR/backend/cadexchanger/cadexsdk/examples/cxx/conversion/cdxfbconverter/build/CMakeFiles/rebuild_cache.dir

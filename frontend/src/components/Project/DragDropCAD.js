@@ -1,14 +1,15 @@
 // DragDropCAD.js
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
 import ConversionProgress from './ConversionProgress';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three-gltf-loader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const DragDropCAD = ({ onCADFiles, visible, onCancel }) => {
   const [conversionInProgress, setConversionInProgress] = React.useState(false);
-
+  const [attachedFileName, setAttachedFileName] = React.useState('');
+  const [cadFiles, setCadFiles] = React.useState([]);
 
   const loadConvertedModel = async (modelData) => {
     const loader = new GLTFLoader();
@@ -22,35 +23,45 @@ const DragDropCAD = ({ onCADFiles, visible, onCancel }) => {
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      const cadFiles = acceptedFiles.filter(
-        (file) => file.type === 'model/iges' || file.type === 'model/step'
-      );
+      setAttachedFileName('');
+      const cadFiles = acceptedFiles.filter((file) => {
+        const ext = file.name.split('.').pop().toLowerCase();
+        return ext === 'iges' || ext === 'igs' || ext === 'step' || ext === 'stp';
+      });
   
       if (cadFiles.length > 0) {
-        const formData = new FormData();
-        formData.append('cadFile', cadFiles[0]);
-  
-        try {
-          const response = await fetch('http://localhost:3001/convert', {
-            method: 'POST',
-            body: formData,
-          });
-  
-          if (response.ok) {
-            const modelData = await response.arrayBuffer();
-            loadConvertedModel(modelData);
-            onCADFiles(cadFiles);
-            setConversionInProgress(true);
-          } else {
-            console.error('Error converting CAD file');
-          }
-        } catch (error) {
-          console.error('Error sending CAD file to server:', error);
-        }
-      }
+        setAttachedFileName(cadFiles[0].name);
+        setCadFiles(cadFiles);
+      }      
     },
-    [onCADFiles]
+    []
   );
+  
+  const handleFileUpload = async () => {
+    if (attachedFileName) {
+      const formData = new FormData();
+      formData.append('cadFile', cadFiles[0]);
+  
+      try {
+        const response = await fetch('http://localhost:3001/convert', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        if (response.ok) {
+          const modelData = await response.arrayBuffer();
+          loadConvertedModel(modelData);
+          onCADFiles(cadFiles);
+          setConversionInProgress(true);
+        } else {
+          console.error('Error converting CAD file');
+        }
+      } catch (error) {
+        console.error('Error sending CAD file to server:', error);
+      }
+    }
+  };
+  
   
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -60,8 +71,27 @@ const DragDropCAD = ({ onCADFiles, visible, onCancel }) => {
       <Modal
         title="Drag and Drop CAD Files"
         visible={visible} // Use the 'visible' prop for the modal's visibility
-        onCancel={onCancel} // Use the 'onCancel' prop for the modal's cancel function
-        footer={null}
+        onCancel={() => {
+          setAttachedFileName('');
+          setCadFiles([]);
+          onCancel();
+        }}
+        footer={
+          <>
+            {attachedFileName && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  handleFileUpload();
+                  onCancel();
+                }}                
+              >
+                OK
+              </Button>
+            )}
+            <Button onClick={onCancel}>Cancel</Button>
+          </>
+        }        
         centered
       >
         <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
@@ -72,6 +102,7 @@ const DragDropCAD = ({ onCADFiles, visible, onCancel }) => {
             <p>Drag and drop CAD files here, or click to select files</p>
           )}
         </div>
+        <p>{attachedFileName ? `Attached file: ${attachedFileName}` : ''}</p>
         {conversionInProgress && <ConversionProgress />}
       </Modal>
     </>

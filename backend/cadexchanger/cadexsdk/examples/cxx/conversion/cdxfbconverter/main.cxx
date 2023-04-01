@@ -33,6 +33,8 @@
 
 #include <cadex/Base_String.hxx>
 #include <cadex/LicenseManager_Activate.h>
+#include <cadex/IGES_Reader.hxx>
+#include <cadex/STEP_Reader.hxx>
 #include <cadex/ModelData_ModelReader.hxx>
 #include <cadex/ModelData_ModelWriter.hxx>
 #include <cadex/ModelData_RepresentationMask.hxx>
@@ -56,20 +58,35 @@ int main (int argc, char *argv[])
     }
 
     if (argc != 3) {
-        cerr << "Usage: " << argv[0] << " <input_file> <output_file>, where:"       << endl;
-        cerr << "    <input_file>  is a name of the JT file to be read"             << endl;
-        cerr << "    <output_file> is a name of the CDXFB file to Save() the model" << endl;
+        cerr << "Usage: " << argv[0] << " <input_file> <output_file>, where:" << endl;
+        cerr << "    <input_file>  is a name of the IGES or STEP file to be read" << endl;
+        cerr << "    <output_file> is a name of the GLTF file to Save() the model" << endl;
         return 1;
     }
 
     const char* aSource = argv[1];
-    const char* aDest   = argv[2];
+    const char* aDest = argv[2];
 
     ModelData_Model aModel;
+    Base_UTF16String aSourceUTF16(aSource);
+    bool isReadSuccessful = false;
 
-    ModelData_ModelReader aReader;
-    // Opening and converting the file
-    if (!aReader.Read (aSource, aModel)) {
+    // Read IGES file
+    if (aSourceUTF16.FindLastOf(u".iges") != Base_UTF16String::NPos() || aSourceUTF16.FindLastOf(u".igs") != Base_UTF16String::NPos()) {
+        IGES_Reader aReader;
+        isReadSuccessful = aReader.Read(aSource, aModel);
+    }
+    // Read STEP file
+    else if (aSourceUTF16.FindLastOf(u".step") != Base_UTF16String::NPos() || aSourceUTF16.FindLastOf(u".stp") != Base_UTF16String::NPos()) {
+        STEP_Reader aReader;
+        isReadSuccessful = aReader.Read(aSource, aModel);
+    }
+    else {
+        cerr << "Unsupported file format: " << aSource << endl;
+        return 1;
+    }
+
+    if (!isReadSuccessful) {
         cerr << "Failed to open and convert the file " << aSource << endl;
         return 1;
     }
@@ -77,19 +94,20 @@ int main (int argc, char *argv[])
     ModelData_ModelWriter aWriter;
     // Saving the model
     ModelData_WriterParameters aParams;
-    aParams.FileFormat()              = ModelData_WriterParameters::FileFormatType::Cdxfb;
+    aParams.FileFormat() = ModelData_WriterParameters::FileFormatType::Gltf;
     aParams.WriteBRepRepresentation() = true;
     aParams.WritePolyRepresentation() = true;
-    aParams.PreferredLOD()            = ModelData_RepresentationMask::ModelData_RM_MediumLOD;
-    aParams.WriteTextures()           = false;
-    aParams.WritePMI()                = false;
+    aParams.PreferredLOD() = ModelData_RepresentationMask::ModelData_RM_MediumLOD;
+    aParams.WriteTextures() = true;
+    aParams.WritePMI() = true;
 
-    aWriter.SetWriterParameters (aParams);
+    aWriter.SetWriterParameters(aParams);
 
-    if (!aWriter.Write (aModel, aDest)) {
+    if (!aWriter.Write(aModel, aDest)) {
         cerr << "Failed to write the file " << aDest << endl;
         return 1;
     };
 
     return 0;
 }
+

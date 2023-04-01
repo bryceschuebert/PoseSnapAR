@@ -18,7 +18,7 @@
 #ifndef _LicenseManager_Activate_HeaderFile
 #define _LicenseManager_Activate_HeaderFile
 
-#include <cadex/LicenseManager_LicenseError.hxx> //for users' convenience
+#include "cadex/LicenseManager_LicenseError.hxx" // for users
 
 #ifndef __CADEX_EXPORT
 #if _WIN32

@@ -1,0 +1,1 @@
+cmd_Release/cadexchanger.node := c++ -bundle -undefined dynamic_lookup -Wl,-search_paths_first -mmacosx-version-min=10.15 -arch arm64 -L./Release -stdlib=libc++  -o Release/cadexchanger.node Release/obj.target/cadexchanger/cadexchanger_binding.o Release/nothing.a 
